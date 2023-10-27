@@ -52,9 +52,9 @@ const popupContent = (features) =>
       2
     )}%</p>
     ${
-      properties.final_lvt_bill_nez > 0
+      properties.final_lvt_bill_nez_c > 0
         ? `
-    <p><strong>Parcel is in NEZ, details may differ</strong></p>
+    <p>Parcel is in NEZ, owner can pay whichever is lower</p>
     `
         : ``
     }`
