@@ -123,19 +123,79 @@ main {
   width: 6rem;
 }
 
+#legend {
+  position: absolute;
+  bottom: 24px;
+  right: 8px;
+  left: auto;
+}
+
+#legend .content {
+  width: 360px;
+  max-height: inherit;
+  overflow-y: visible;
+  background: none;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+#legend h1 {
+  font-size: 18px;
+  margin-bottom: 0;
+}
+
+#legend legend {
+  font-size: 16px;
+}
+
+#legend label {
+  font-size: 16px;
+}
+
+#legend .content {
+  max-height: 140px;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  padding: 8px 12px;
+  background: radial-gradient(farthest-side at 50% 100%,
+      rgba(34, 34, 34, 0.3),
+      rgba(0, 0, 0, 0)) 0 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-size: 100% 8px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+  border: solid 1px #d5d5d5;
+}
+
+.scale {
+  margin-top: 8px;
+}
+
+.scale-parcels {
+  width: 100%;
+  height: 28px;
+  background: linear-gradient(to right,
+  #2166ac, #f7f7f7 50%, #b2182b);
+  margin-bottom: 4px;
+}
+.labels-parcels {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
 @media screen and (max-width: 600px) {
-
-  body,
-  main {
-    min-height: auto;
+#legend {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
   }
 
-  main {
-    flex-wrap: wrap;
-  }
-
-  #map-container {
-    height: 500px;
+  #legend .content {
+    max-width: auto;
     width: 100%;
+    padding-bottom: 48px;
   }
 }
