@@ -1,0 +1,141 @@
+@import "./reset.css";
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+  font-weight: 400;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body,
+.maplibre-map {
+  font-family: -apple-system, BlinkMacSystemFont, avenir next,
+    avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial,
+    sans-serif;
+}
+
+html {
+  height: -webkit-fill-available;
+}
+
+body,
+main {
+  min-height: 700px;
+  min-height: -webkit-fill-available;
+  margin: 0;
+  padding: 0;
+}
+
+main {
+  height: 100%;
+}
+
+.visually-hidden {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.visually-hidden-focusable:not(:focus) {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+main {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+#map-container {
+  position: relative;
+  width: auto;
+  height: 100vh;
+  flex-grow: 1;
+}
+
+#map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.tooltip {
+  position: relative;
+  width: 1rem;
+  height: 1rem;
+}
+
+.tooltip svg {
+  width: 1rem;
+}
+
+.tooltip .tooltip-content {
+  display: none;
+  position: absolute;
+  left: 100%;
+  top: 100%;
+  transform: translateY(-50%);
+  background-color: black;
+  color: white;
+}
+
+.tooltip:hover .tooltip-content,
+.tooltip:focus .tooltip-content {
+  display: block;
+}
+
+.popup p {
+  padding: 4px 0;
+}
+
+.popup p+.title {
+  margin-top: 12px;
+}
+
+.popup p:not(:last-child) {
+  border-bottom: solid 1px #ccc;
+}
+
+.popup p>strong {
+  display: inline-block;
+  width: 6rem;
+}
+
+@media screen and (max-width: 600px) {
+
+  body,
+  main {
+    min-height: auto;
+  }
+
+  main {
+    flex-wrap: wrap;
+  }
+
+  #map-container {
+    height: 500px;
+    width: 100%;
+  }
+}
