@@ -13,7 +13,7 @@
     "parcels": {
       "type": "vector",
       "minzoom": 11,
-      "maxzoom": 17,
+      "maxzoom": 16,
       "url": "pmtiles://https://detroit-land-value-tax-maps.us-east-1.linodeobjects.com/data/parcels.pmtiles",
       "attribution": "City of Detroit"
     }
@@ -896,11 +896,36 @@
         "fill-color": {
           "property": "pct_change",
           "stops": [
-            [-25, "#2166ac"],
+            [-25, "#5e3c99"],
+            [-12.5, "#b2abd2"],
             [0, "#f7f7f7"],
-            [25, "#b2182b"]
+            [12.5, "#fdb863"],
+            [25, "#e66101"]
           ]
         }
+      }
+    },
+    {
+      "id": "parcels-stroke",
+      "source": "parcels",
+      "source-layer": "parcels",
+      "type": "line",
+      "layout": {
+        "visibility": "visible"
+      },
+      "paint": {
+        "line-color": "rgb(86,88,93)",
+        "line-width": ["interpolate", ["linear"], ["zoom"], 5, 0.5, 12, 1.5],
+        "line-opacity": [
+          "case",
+          [
+            "any",
+            ["boolean", ["feature-state", "hover"], false],
+            ["boolean", ["feature-state", "click"], false]
+          ],
+          1,
+          0
+        ]
       }
     },
     {

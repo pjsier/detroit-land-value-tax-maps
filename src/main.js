@@ -1,6 +1,8 @@
 import maplibregl from "maplibre-gl"
 import * as pmtiles from "pmtiles"
 
+import { setupGeocoder } from "./geocoder"
+
 import "maplibre-gl/dist/maplibre-gl.css"
 import "./css/style.css"
 
@@ -11,17 +13,21 @@ const mapContainer = document.getElementById("map")
 
 const TOOLTIP_LAYERS = ["parcels"]
 
+let mapData = { hoverId: null, clickId: null, clickFeat: null }
+
 const map = new maplibregl.Map({
   container: mapContainer,
   style: "style.json",
   center: [-83.08193, 42.37004],
-  zoom: 12,
-  minZoom: 12,
+  zoom: 11,
+  minZoom: 11,
   maxZoom: 18,
   hash: true,
   dragRotate: false,
   attributionControl: true,
 })
+
+map.touchZoomRotate.disableRotation()
 
 const isMobile = () => window.innerWidth <= 600
 
@@ -40,9 +46,9 @@ const popupContent = (features) =>
     .map(
       ({ properties }) => `<p><strong>Address</strong> ${properties.address}</p>
     <p><strong>PIN</strong> ${properties.parcel_num}</p>
-    <p><strong>Taxpayer City</strong> ${properties.taxpayer_city}</p>
-    <p><strong>Taxpayer State</strong> ${properties.taxpayer_state}</p>
-    <p><strong>Property Class</strong> ${properties.property_class_desc}</p>
+    <p><strong>Taxpayer City</strong> ${properties.taxpayer_city}, ${
+      properties.taxpayer_state
+    }</p>
     <p><strong>Assessed Value</strong> $${properties.assessed_value.toLocaleString()}</p>
     <p><strong>2023 Tax Bill</strong> $${properties.bill.toLocaleString()}</p>
     <p><strong>Estimated Land Value Tax Bill</strong> $${(
@@ -54,7 +60,7 @@ const popupContent = (features) =>
     ${
       properties.final_lvt_bill_nez_c > 0
         ? `
-    <p>Parcel is in NEZ, owner can pay whichever is lower</p>
+    <p>Parcel is in NEZ, owner could pay the lower of land value or NEZ rate</p>
     `
         : ``
     }`
@@ -66,10 +72,55 @@ const removePopup = (popup) => {
   popup.remove()
 }
 
+const handleFeaturesHover = (features) => {
+  if (mapData.hoverId) {
+    map.setFeatureState(
+      { source: "parcels", sourceLayer: "parcels", id: mapData.hoverId },
+      { hover: false }
+    )
+  }
+  if (features.length > 0) {
+    map.setFeatureState(
+      { source: "parcels", sourceLayer: "parcels", id: features[0].id },
+      { hover: true }
+    )
+    mapData.hoverId = features[0].id
+  }
+}
+
+const handleFeaturesClick = (features) => {
+  if (features.length === 0) {
+    map.setFeatureState(
+      {
+        source: "parcels",
+        sourceLayer: "parcels",
+        id: mapData.clickId,
+      },
+      { click: false }
+    )
+    mapData.clickId = null
+    mapData.clickFeat = null
+  } else {
+    map.setFeatureState(
+      {
+        source: "parcels",
+        sourceLayer: "parcels",
+        id: features[0].id,
+      },
+      { click: true }
+    )
+    mapData.clickId = features[0].id
+    mapData.clickFeat = features[0]
+  }
+}
+
+clickPopup.on("close", () => handleFeaturesClick([]))
+
 const onMouseMove = (e) => {
   const features = map.queryRenderedFeatures(e.point, {
     layers: TOOLTIP_LAYERS,
   })
+  handleFeaturesHover(features)
   if (features.length > 0 && !clickPopup.isOpen()) {
     map.getCanvas().style.cursor = "pointer"
     if (!isMobile()) {
@@ -84,6 +135,7 @@ const onMouseMove = (e) => {
 }
 
 const onMouseOut = () => {
+  handleFeaturesHover([])
   removePopup(hoverPopup)
 }
 
@@ -91,6 +143,8 @@ const onMapClick = (e) => {
   const features = map.queryRenderedFeatures(e.point, {
     layers: TOOLTIP_LAYERS,
   })
+  handleFeaturesHover(features)
+  handleFeaturesClick(clickPopup.isOpen() ? [] : features)
   if (features.length > 0) {
     map.getCanvas().style.cursor = "pointer"
     removePopup(hoverPopup)
@@ -105,4 +159,17 @@ TOOLTIP_LAYERS.forEach((layer) => {
   map.on("mousemove", layer, onMouseMove)
   map.on("mouseout", layer, onMouseOut)
   map.on("click", layer, onMapClick)
+})
+
+setupGeocoder(({ lat, lon }) => {
+  clickPopup.remove()
+  map.flyTo({
+    center: [lon, lat],
+    zoom: 15,
+  })
+  map.resize()
+
+  map.once("idle", () => {
+    onMapClick({ point: map.project([lon, lat]), lngLat: [lon, lat] })
+  })
 })

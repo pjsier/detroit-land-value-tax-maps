@@ -14,9 +14,19 @@ body {
 html,
 body,
 .maplibre-map {
-  font-family: -apple-system, BlinkMacSystemFont, avenir next,
-    avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial,
-    sans-serif;
+  font-family: BlinkMacSystemFont,
+    -apple-system,
+    Helvetica Neue,
+    Segoe UI,
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    Fira Sans,
+    Droid Sans,
+    Helvetica,
+    Arial,
+    sans-serif
 }
 
 html {
@@ -25,7 +35,7 @@ html {
 
 body,
 main {
-  min-height: 700px;
+  min-height: 100vh;
   min-height: -webkit-fill-available;
   margin: 0;
   padding: 0;
@@ -156,9 +166,6 @@ main {
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
   padding: 8px 12px;
-  background: radial-gradient(farthest-side at 50% 100%,
-      rgba(34, 34, 34, 0.3),
-      rgba(0, 0, 0, 0)) 0 100%;
   background-color: rgba(255, 255, 255, 0.8);
   background-repeat: no-repeat;
   background-attachment: scroll;
@@ -175,7 +182,7 @@ main {
   width: 100%;
   height: 28px;
   background: linear-gradient(to right,
-  #2166ac, #f7f7f7 50%, #b2182b);
+  #5e3c99, #b2abd2 25%, #f7f7f7 50%, #fdb863 75%, #e66101);
   margin-bottom: 4px;
 }
 .labels-parcels {
@@ -184,18 +191,238 @@ main {
   align-items: center;
   justify-content: space-between;
 }
-
-@media screen and (max-width: 600px) {
 #legend {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+#legend .content {
+  max-width: auto;
+  width: 100%;
+  padding-bottom: 48px;
+}
+
+#geocoder-container {
+  height: 42px;
+  border-radius: 2px;
+  background-color: #fff;
+  position: relative;
+  margin-bottom: 4px;
+}
+
+#geocoder svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  width: 16px;
+  transform: translateY(-50%);
+  opacity: 0.8;
+}
+
+#geocoder-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 2;
+  background-color: #fff;
+  box-shadow: 0 3px 2px -2px rgba(0, 0, 0, 0.25);
+}
+
+#geocoder-results .result {
+  padding: 6px 12px;
+  background-color: #fff;
+  cursor: pointer;
+  max-width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  border: solid 1px #d5d5d5;
+  border-top-width: 0;
+}
+
+#geocoder-results .result:hover,
+#geocoder-results .result:active {
+  box-shadow: 0 0 1px 1px #0a60c2;
+  position: relative;
+  z-index: 1;
+}
+
+#geocoder-results .result[aria-selected] {
+  background-color: #c0ddff;
+  font-weight: 600;
+}
+
+#geocoder-results .result:first-child {
+  border-top-width: 1px;
+}
+
+#geocoder,
+#geocoder-search {
+  width: 100%;
+  height: 100%;
+}
+
+#geocoder-search {
+  display: inline-flex;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  align-items: center;
+  justify-content: flex-start;
+  border-radius: 0;
+  border: solid 1px #d5d5d5;
+  padding: 12px 8px;
+  padding-left: 34px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.25);
+}
+
+#geocoder-search::placeholder {
+  color: #2c2e35;
+  opacity: 0.8;
+}
+
+#geocoder-search:focus {
+  outline: none;
+  box-shadow: 0 0 1px 1px #0a60c2;
+}
+
+.delete {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  pointer-events: auto;
+  display: inline-block;
+  position: relative;
+  outline: none;
+  font-size: 0;
+  height: 20px;
+  width: 20px;
+  min-height: 20px;
+  min-width: 20px;
+  max-height: 20px;
+  max-width: 20px;
+  vertical-align: top;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.delete::before,
+.delete::after {
+  display: block;
+  position: absolute;
+  background-color: #fff;
+  content: "";
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%) rotate(45deg);
+  transform-origin: center center;
+}
+
+.delete::before {
+  height: 2px;
+  width: 50%;
+}
+
+.delete::after {
+  height: 50%;
+  width: 2px;
+}
+
+.delete:hover,
+.delete:focus {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.delete:active {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+#geocoder-clear {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  display: none;
+}
+
+#geocoder-search.has-value {
+  padding-right: 36px;
+}
+
+#geocoder-search.has-value+#geocoder-clear {
+  display: inline-block;
+}
+
+@media screen and (min-width: 800px) {
+  #geocoder-container {
+    width: 360px;
+    margin-bottom: 8px;
+  }
+
+  #legend {
+    bottom: 24px;
+    right: 8px;
+    left: auto;
   }
 
   #legend .content {
-    max-width: auto;
-    width: 100%;
-    padding-bottom: 48px;
+    width: 360px;
+    padding-bottom: 8px;
+    max-height: inherit;
+    overflow-y: visible;
+    background: none;
+    background-color: rgba(255, 255, 255, 0.8);
   }
+
+  #legend h1 {
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .scale {
+    margin-top: 8px;
+  }
+}
+
+.maplibregl-popup {
+  z-index: 1;
+}
+
+.maplibregl-popup .maplibregl-popup-tip {
+  border-top-color: rgba(255, 255, 255, 0.8);
+}
+
+.maplibregl-popup .maplibregl-popup-content {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.maplibregl-popup .maplibregl-popup-content {
+  padding: 0;
+  pointer-events: none;
+}
+
+.maplibregl-popup .tooltip-results-label {
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.maplibregl-popup-content .tooltip-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.maplibregl-popup-content .popup {
+  padding: 10px 10px 15px;
+  pointer-events: none;
+}
+
+.maplibregl-popup-close-button,
+.maplibregl-popup-content .popup.click {
+  pointer-events: all;
 }

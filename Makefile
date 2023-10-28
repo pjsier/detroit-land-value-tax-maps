@@ -1,6 +1,8 @@
 S3_BUCKET = detroit-land-value-tax-maps
 S3_REGION = us-east-1
 
+all: output/parcels.pmtiles
+
 .PHONY: deploy
 deploy:
 	s3cmd sync ./dist/ s3://$(S3_BUCKET)/ \
@@ -35,26 +37,28 @@ output/parcels.mbtiles: output/parcels.geojson
 	--simplification=10 \
 	--simplify-only-low-zooms \
 	--minimum-zoom=11 \
-	--maximum-zoom=17 \
+	--maximum-zoom=16 \
 	--no-tile-stats \
 	--detect-shared-borders \
 	--grid-low-zooms \
 	--coalesce-smallest-as-needed \
 	--accumulate-attribute=pct_change:mean \
 	--attribute-type=parcel_num:string \
-	--use-attribute-for-id=od \
+	--use-attribute-for-id=id \
 	--force \
 	-L parcels:$< -o $@
 
+.PRECIOUS: output/parcels.geojson
 output/parcels.geojson: input/parcels.geojson output/detroit-lvt.csv
 	node --max_old_space_size=8192 $$(which mapshaper) -i $< \
 	-join $(filter-out $<,$^) field-types=parcel_num:str keys=parcel_num,parcel_num \
 	-filter 'bill !== null && bill > 0' \
 	-rename-fields id=ObjectId,taxpayer=taxpayer_1,assessed_value=a_tv \
-	-filter-fields id,parcel_num,address,taxpayer,taxpayer_city,taxpayer_state,property_class_desc,assessed_value,land_value,bill,final_change_c,lvt_c,exemption_nez_c,final_lvt_bill_nez_c \
+	-filter-fields id,parcel_num,address,taxpayer,taxpayer_city,taxpayer_state,assessed_value,land_value,bill,final_change_c,lvt_c,exemption_nez_c,final_lvt_bill_nez_c \
 	-each 'pct_change = +((final_change_c / bill) * 100).toFixed(1)' \
 	-o $@
 
+.PRECIOUS: output/detroit-lvt.csv
 output/detroit-lvt.csv: input/detroit-lvt.geojson
 	mapshaper -i $< -rename-fields parcel_num=pnum -o $@
 
