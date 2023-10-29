@@ -58,9 +58,11 @@ const popupContent = (features) =>
       2
     )}%</p>
     ${
-      properties.final_lvt_bill_nez_c > 0
+      properties.post_nez_bill_c !== 0
         ? `
-    <p>Parcel is in NEZ, owner could pay the lower of land value or NEZ rate</p>
+        <p><strong>Bill After NEZ Expiration</strong>$${properties.post_nez_bill_c.toLocaleString()}</p>
+        <p><strong>Estimated Bill After NEZ Expiration</strong>$${properties.final_lvt_bill_nez_c.toLocaleString()}</p>
+        <p>Parcel is in NEZ, owner could pay the lower of land value or NEZ rate</p>
     `
         : ``
     }`
@@ -165,7 +167,7 @@ setupGeocoder(({ lat, lon }) => {
   clickPopup.remove()
   map.flyTo({
     center: [lon, lat],
-    zoom: 15,
+    zoom: 16,
   })
   map.resize()
 

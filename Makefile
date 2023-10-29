@@ -54,8 +54,8 @@ output/parcels.geojson: input/parcels.geojson output/detroit-lvt.csv
 	-join $(filter-out $<,$^) field-types=parcel_num:str keys=parcel_num,parcel_num \
 	-filter 'bill !== null && bill > 0' \
 	-rename-fields id=ObjectId,taxpayer=taxpayer_1,assessed_value=a_tv \
-	-filter-fields id,parcel_num,address,taxpayer,taxpayer_city,taxpayer_state,assessed_value,land_value,bill,final_change_c,lvt_c,exemption_nez_c,final_lvt_bill_nez_c \
 	-each 'pct_change = +((final_change_c / bill) * 100).toFixed(1)' \
+	-filter-fields id,parcel_num,address,taxpayer_city,taxpayer_state,assessed_value,bill,final_change_c,final_lvt_bill_nez_c,post_nez_bill_c,pct_change \
 	-o $@
 
 .PRECIOUS: output/detroit-lvt.csv
