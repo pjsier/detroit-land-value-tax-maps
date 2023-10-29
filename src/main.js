@@ -1,13 +1,9 @@
 import maplibregl from "maplibre-gl"
-import * as pmtiles from "pmtiles"
 
 import { setupGeocoder } from "./geocoder"
 
 import "maplibre-gl/dist/maplibre-gl.css"
 import "./css/style.css"
-
-let protocol = new pmtiles.Protocol()
-maplibregl.addProtocol("pmtiles", protocol.tile)
 
 const mapContainer = document.getElementById("map")
 

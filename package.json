@@ -8,8 +8,7 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "maplibre-gl": "^3.5.2",
-    "pmtiles": "^2.11.0"
+    "maplibre-gl": "^3.5.2"
   },
   "devDependencies": {
     "@babel/core": "^7.23.2",

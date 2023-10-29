@@ -3,7 +3,6 @@ export default {
     rollupOptions: {
       output: {
         manualChunks: {
-          pmtiles: ["pmtiles"],
           "maplibre-gl": ["maplibre-gl"],
         },
       },

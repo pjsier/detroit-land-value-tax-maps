@@ -1,7 +1,7 @@
 S3_BUCKET = detroit-land-value-tax-maps
 S3_REGION = us-east-1
 
-all: output/parcels.pmtiles
+all: tiles/parcels/
 
 .PHONY: deploy
 deploy:
@@ -16,6 +16,20 @@ deploy:
 	--guess-mime-type \
 	--add-header 'Cache-Control: "public, max-age=0, must-revalidate"'
 
+.PHONY: deploy-tiles
+deploy-tiles:
+	s3cmd sync ./tiles/ s3://$(S3_BUCKET)/tiles/ \
+	--region=$(S3_REGION) \
+	--host=$(S3_REGION).linodeobjects.com \
+	--host-bucket="%(bucket)s.$(S3_REGION).linodeobjects.com" \
+	--progress \
+	--no-preserve \
+	--acl-public \
+	--no-mime-magic \
+	--guess-mime-type \
+	--add-header 'Content-Encoding: gzip' \
+	--add-header 'Cache-Control: "public, max-age=86400"'
+
 .PHONY: deploy-data
 deploy-data:
 	s3cmd sync ./output/ s3://$(S3_BUCKET)/data/ \
@@ -28,6 +42,9 @@ deploy-data:
 	--no-mime-magic \
 	--guess-mime-type \
 	--add-header 'Cache-Control: "public, max-age=0, must-revalidate"'
+
+tiles/parcels/: output/parcels.mbtiles
+	tile-join --no-tile-size-limit --force -e $@ $<
 
 output/parcels.pmtiles: output/parcels.mbtiles
 	pmtiles convert $< $@

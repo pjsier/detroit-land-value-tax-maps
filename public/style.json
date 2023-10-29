@@ -14,7 +14,9 @@
       "type": "vector",
       "minzoom": 11,
       "maxzoom": 16,
-      "url": "pmtiles://https://detroit-land-value-tax-maps.us-east-1.linodeobjects.com/data/parcels.pmtiles",
+      "tiles": [
+        "https://detroit-land-value-tax-maps.us-east-1.linodeobjects.com/tiles/parcels/{z}/{x}/{y}.pbf"
+      ],
       "attribution": "City of Detroit"
     }
   },

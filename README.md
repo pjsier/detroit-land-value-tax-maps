@@ -11,7 +11,7 @@ Mapping data released around the Detroit Land Value Tax Plan. Current data from 
 
 ## Setup
 
-To build the data you'll need [`mapshaper`](https://github.com/mbloch/mapshaper), [`pyesridump`](https://github.com/openaddresses/pyesridump), [`tippecanoe`](https://github.com/felt/tippecanoe), and [`pmtiles`](https://github.com/protomaps/go-pmtiles) installed.
+To build the data you'll need [`mapshaper`](https://github.com/mbloch/mapshaper), [`pyesridump`](https://github.com/openaddresses/pyesridump), and [`tippecanoe`](https://github.com/felt/tippecanoe) installed.
 
 ```sh
 make all
