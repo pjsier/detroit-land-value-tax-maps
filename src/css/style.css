@@ -175,7 +175,7 @@ main {
 }
 
 .scale {
-  margin-top: 8px;
+  margin: 8px 0;
 }
 
 .scale-parcels {
@@ -202,6 +202,11 @@ main {
   max-width: auto;
   width: 100%;
   padding-bottom: 48px;
+}
+
+.legend-subtitle {
+  font-style: italic;
+  font-size: 14px;
 }
 
 #geocoder-container {
